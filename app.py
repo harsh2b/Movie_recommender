@@ -131,11 +131,3 @@ if st.button('Get Recommendations'):
         with cols[i]:
             st.markdown(f'<p class="movie-name">{names[i]}</p>', unsafe_allow_html=True)
             st.image(posters[i], caption=names[i], width=200)
-            if st.button(f"More Info for {names[i]}", key=f"info_{i}"):  # Button for more information
-                poster, genres, description = fetch_movie_details(movie_ids[i])  # Fetch movie details
-                st.image(poster, width=250)
-                st.markdown(f'<p class="subheader">Genres:</p>', unsafe_allow_html=True)
-                st.markdown(f'<p class="genre">{" ,".join(genres)}</p>', unsafe_allow_html=True)
-                st.markdown(f'<p class="subheader">Storyline:</p>', unsafe_allow_html=True)
-                st.markdown(f'<p class="description">{description}</p>', unsafe_allow_html=True)
-
