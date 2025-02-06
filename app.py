@@ -1,133 +1,157 @@
-import streamlit as st
+import streamlit as st 
 import pickle
 import requests
 
-# Function to fetch movie details like poster, genres, and description
+# ---------------------
+# Helper Functions
+# ---------------------
 def fetch_movie_details(movie_id):
+    """Fetch movie poster, genres, and description using TMDB API."""
     api_key = '345627e8aa0cea1b0fbc016806f23346'
     base_url = "https://api.themoviedb.org/3/movie/"
     response = requests.get(f"{base_url}{movie_id}?api_key={api_key}")
 
     if response.status_code == 200:
         data = response.json()
-        poster_url = f"https://image.tmdb.org/t/p/w500{data['poster_path']}"
+        poster_url = f"https://image.tmdb.org/t/p/w500{data.get('poster_path', '')}"
         genres = [genre['name'] for genre in data.get('genres', [])]
         description = data.get('overview', 'No description available.')
         return poster_url, genres, description
     return None, None, None
 
-# Function to recommend movies
-def recommend(movie):
-    movie_index = movies_df[movies_df['title'] == movie].index[0]  # Use DataFrame to get the index
-    distances = similarity[movie_index]  # Get similarity scores
-    movie_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x: x[1])[1:6]
+def recommend(movie_title, top_n=5):
+    """Recommend movies based on similarity."""
+    if movie_title not in movies_df['title'].values:
+        return [], [], [], []
     
-    recommended_movies = []
-    recommended_posters = []
-    recommended_movie_ids = []
-
+    movie_index = movies_df[movies_df['title'] == movie_title].index[0]
+    distances = similarity[movie_index]
+    movie_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x: x[1])[1:top_n+1]
+    
+    recommendations = []
+    posters = []
+    movie_ids = []
+    genres_list = []
+    
     for i in movie_list:
-        movie_id = movies_df.iloc[i[0]].movie_id  # Use the DataFrame to get movie_id
-        title = movies_df.iloc[i[0]].title  # Fetch the title
-        poster = fetch_movie_details(movie_id)[0]  # Fetch poster
-        recommended_movies.append(title)
-        recommended_posters.append(poster)
-        recommended_movie_ids.append(movie_id)
+        movie_row = movies_df.iloc[i[0]]
+        # Using the 'movie_id' column
+        movie_id = movie_row['movie_id']
+        poster, genres, _ = fetch_movie_details(movie_id)
+        
+        recommendations.append(movie_row['title'])
+        posters.append(poster)
+        movie_ids.append(movie_id)
+        genres_list.append(genres)
+    
+    return recommendations, posters, movie_ids, genres_list
 
-    return recommended_movies, recommended_posters, recommended_movie_ids
-
-# Load the model and similarity data
+# ---------------------
+# Load Data
+# ---------------------
 with open('Movie_recommended_model.pkl', 'rb') as f:
-    movies_df = pickle.load(f)  # Load the DataFrame directly
+    movies_df = pickle.load(f)
 
-
-# Initialize an empty list to combine parts
 similarity_combined = []
+for i in range(1, 9):
+    with open(f'Similarity_{i}.pkl', 'rb') as b:
+        similarity_combined.extend(pickle.load(b))
 
-# Load each part and append to the combined list
-for i in range(1, 9):  # Assuming 8 parts
-    with open(f'Similarity_part{i}.pkl', 'rb') as b:
-        part = pickle.load(b)
-        similarity_combined.extend(part)
-
-# Assign the combined data to similarity
 similarity = similarity_combined
 
-# Now `similarity` contains the full data loaded from all parts
-
-
-# Set the page configuration
+# ---------------------
+# Styling & Config
+# ---------------------
 st.set_page_config(page_title="Movie Recommendation System", page_icon="🎥", layout="wide")
 
-# Apply custom CSS for styling
+# Updated CSS to force a true black background and modern cyan accent colors.
 st.markdown("""
     <style>
+        /* Force black background for the main app */
+        .stApp, .reportview-container {
+            background-color: #000 !important;
+        }
+        /* Sidebar background */
+        .sidebar .sidebar-content {
+            background-color: #111 !important;
+        }
+        /* General text styling */
+        body, .block-container {
+            color: #e0e0e0;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+        /* Override label color for selectbox and other form elements */
+        label {
+            color: #00bcd4 !important;
+            font-weight: 500;
+        }
+        /* Title styling */
         .title {
-            font-size: 40px;
-            color: #1F8A70;
-            font-family: 'Arial', sans-serif;
-            font-weight: bold;
+            font-size: 48px; 
+            color: #00bcd4;
             text-align: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
         }
-        .subheader {
-            font-size: 25px;
-            color: #2F4F4F;
-            font-family: 'Arial', sans-serif;
-        }
-        .movie-name {
-            font-size: 18px;
-            font-weight: bold;
+        /* Movie title styling */
+        .movie-title {
+            font-size: 20px; 
+            color: #ffffff;
             text-align: center;
-            color: #333;
-            cursor: pointer;
-            transition: 0.3s;
+            margin-top: 10px;
         }
-        .movie-name:hover {
-            color: #FF5733;
-        }
+        /* Highlighted genre styling */
         .genre {
-            font-size: 16px;
-            color: #999;
-            font-weight: 600;
+            font-size: 14px; 
+            color: #00bcd4; /* Modern cyan accent color */
+            text-align: center;
+            font-weight: bold;
+            background-color: #222;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 5px;
         }
-        .description {
-            font-size: 16px;
-            color: #555;
-            line-height: 1.5;
-        }
+        /* Button styling */
         .stButton>button {
-            background-color: #FF5733;
-            color: white;
-            font-size: 18px;
-            border-radius: 10px;
-            padding: 10px;
+            background-color: #00bcd4;
+            color: #ffffff;
+            font-size: 16px;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: 0.3s;
+            margin-top: 10px;
         }
         .stButton>button:hover {
-            background-color: #1F8A70;
+            background-color: #0097a7;
         }
+        /* Movie poster styling */
         .movie-poster {
-            border-radius: 10px;
-            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px; 
+            box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.2);
         }
     </style>
 """, unsafe_allow_html=True)
 
-# Title
+# ---------------------
+# Main Recommendation Page
+# ---------------------
 st.markdown('<div class="title">🎬 Movie Recommendation System</div>', unsafe_allow_html=True)
 
-# Movie selection
-selected_movie_name = st.selectbox("🔍 Select a movie to get recommendations", movies_df['title'].values)
+# Movie selection (the label "🔍 Select a movie" now appears in modern cyan)
+title_selected = st.selectbox("🔍 Select a movie", movies_df['title'].values)
 
-# Recommendation logic
+# Get recommendations (default 5 recommendations)
 if st.button('Get Recommendations'):
-    names, posters, movie_ids = recommend(selected_movie_name)
+    names, posters, movie_ids, genres_list = recommend(title_selected, top_n=5)
     
-    # Displaying all recommended movies in a single row
-    cols = st.columns(5)  # Create 5 columns for the recommendations
-    
+    cols = st.columns(min(len(names), 5))
     for i in range(len(names)):
-        with cols[i]:
-            st.markdown(f'<p class="movie-name">{names[i]}</p>', unsafe_allow_html=True)
-            st.image(posters[i], caption=names[i], width=200)
+        with cols[i % 5]:
+            st.markdown(f'<p class="movie-title">{names[i]}</p>', unsafe_allow_html=True)
+            if posters[i]:
+                st.image(posters[i], caption=names[i], width=200)
+            if genres_list[i]:
+                genres_formatted = ", ".join(genres_list[i])
+                st.markdown(f'<p class="genre">Genres: {genres_formatted}</p>', unsafe_allow_html=True)
