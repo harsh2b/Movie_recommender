@@ -1,7 +1,7 @@
 import streamlit as st 
 import pickle
 import requests
-import os
+
 
 
 api_key = st.secrets["api_key"]
