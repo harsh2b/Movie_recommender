@@ -1,13 +1,17 @@
 import streamlit as st 
 import pickle
 import requests
+import os
+
+
+api_key = st.secrets["api_key"]
 
 # ---------------------
 # Helper Functions
 # ---------------------
 def fetch_movie_details(movie_id):
     """Fetch movie poster, genres, and description using TMDB API."""
-    api_key = '345627e8aa0cea1b0fbc016806f23346'
+    api_key = 'TMDB_API_KEY'
     base_url = "https://api.themoviedb.org/3/movie/"
     response = requests.get(f"{base_url}{movie_id}?api_key={api_key}")
 
