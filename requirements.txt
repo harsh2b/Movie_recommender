@@ -1,5 +1,7 @@
-pandas==2.2.2
-numpy==1.26.4
-scikit-learn==1.4.2
-streamlit==1.32.0
-requests==2.32.2
+requests
+pandas
+pydantic
+fastapi
+uvicorn
+python-dotenv
+gunicorn

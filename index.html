@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommendations System </title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="ai-badge">
+                <span class="ai-line"></span>
+                <span class="ai-text">AI POWERED</span>
+                <span class="ai-line"></span>
+            </div>
+            <h1 class="main-title">Movie Recommendations System </h1>
+            <p class="subtitle">Unlock a personalized cinematic experience with movie recommendations</p>
+        </header>
+
+        <!-- Search Section -->
+        <section class="search-section">
+            <div class="search-container">
+                <h2 class="search-title">Find Your Next Favorite Movie</h2>
+                <div class="search-form">
+                    <div class="dropdown-container">
+                        <select id="movieSelect" class="movie-dropdown">
+                            <option value="">Select a movie you liked...</option>
+                            <!-- OPTIONS WILL BE POPULATED BY YOUR BACKEND API -->
+                            <!-- Example options for demo purposes -->
+                            <option value="avengers-endgame">Avengers: Endgame</option>
+                            <option value="inception">Inception</option>
+                            <option value="the-dark-knight">The Dark Knight</option>
+                            <option value="interstellar">Interstellar</option>
+                            <option value="pulp-fiction">Pulp Fiction</option>
+                        </select>
+                        <div class="dropdown-arrow">
+                            <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <button id="getRecommendations" class="recommend-btn">
+                        Get Recommendations
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recommendations Section -->
+        <section class="recommendations-section" id="recommendationsSection">
+            <h2 class="recommendations-title">Recommended Movies</h2>
+            <div class="movies-grid" id="moviesGrid">
+                <!-- MOVIE CARDS WILL BE POPULATED BY YOUR BACKEND API -->
+                <!-- Example cards for demo purposes -->
+                <div class="movie-card">
+                    <div class="movie-poster">
+                        <img src="https://via.placeholder.com/300x450/1a1a2e/ffffff?text=Avengers+Infinity+War" alt="Movie Poster">
+                        <div class="movie-overlay">
+                            <div class="movie-rating">8.4</div>
+                        </div>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">Avengers: Infinity War</h3>
+                        <div class="movie-genres">
+                            <span class="genre-tag">Action</span>
+                            <span class="genre-tag">Adventure</span>
+                            <span class="genre-tag">Sci-Fi</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="movie-card">
+                    <div class="movie-poster">
+                        <img src="https://via.placeholder.com/300x450/1a1a2e/ffffff?text=Avengers+Endgame" alt="Movie Poster">
+                        <div class="movie-overlay">
+                            <div class="movie-rating">8.8</div>
+                        </div>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">Avengers: Endgame</h3>
+                        <div class="movie-genres">
+                            <span class="genre-tag">Action</span>
+                            <span class="genre-tag">Adventure</span>
+                            <span class="genre-tag">Drama</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="movie-card">
+                    <div class="movie-poster">
+                        <img src="https://via.placeholder.com/300x450/1a1a2e/ffffff?text=Captain+Marvel" alt="Movie Poster">
+                        <div class="movie-overlay">
+                            <div class="movie-rating">7.3</div>
+                        </div>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">Captain Marvel</h3>
+                        <div class="movie-genres">
+                            <span class="genre-tag">Action</span>
+                            <span class="genre-tag">Adventure</span>
+                            <span class="genre-tag">Sci-Fi</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="movie-card">
+                    <div class="movie-poster">
+                        <img src="https://via.placeholder.com/300x450/1a1a2e/ffffff?text=Doctor+Strange" alt="Movie Poster">
+                        <div class="movie-overlay">
+                            <div class="movie-rating">7.5</div>
+                        </div>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">Doctor Strange</h3>
+                        <div class="movie-genres">
+                            <span class="genre-tag">Action</span>
+                            <span class="genre-tag">Adventure</span>
+                            <span class="genre-tag">Fantasy</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="movie-card">
+                    <div class="movie-poster">
+                        <img src="https://via.placeholder.com/300x450/1a1a2e/ffffff?text=Thor+Ragnarok" alt="Movie Poster">
+                        <div class="movie-overlay">
+                            <div class="movie-rating">7.9</div>
+                        </div>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">Thor: Ragnarok</h3>
+                        <div class="movie-genres">
+                            <span class="genre-tag">Action</span>
+                            <span class="genre-tag">Adventure</span>
+                            <span class="genre-tag">Comedy</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="movie-card">
+                    <div class="movie-poster">
+                        <img src="https://via.placeholder.com/300x450/1a1a2e/ffffff?text=Black+Panther" alt="Movie Poster">
+                        <div class="movie-overlay">
+                            <div class="movie-rating">7.3</div>
+                        </div>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">Black Panther</h3>
+                        <div class="movie-genres">
+                            <span class="genre-tag">Action</span>
+                            <span class="genre-tag">Adventure</span>
+                            <span class="genre-tag">Sci-Fi</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="movie-card">
+                    <div class="movie-poster">
+                        <img src="https://via.placeholder.com/300x450/1a1a2e/ffffff?text=Spider-Man+Homecoming" alt="Movie Poster">
+                        <div class="movie-overlay">
+                            <div class="movie-rating">7.4</div>
+                        </div>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">Spider-Man: Homecoming</h3>
+                        <div class="movie-genres">
+                            <span class="genre-tag">Action</span>
+                            <span class="genre-tag">Adventure</span>
+                            <span class="genre-tag">Sci-Fi</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="movie-card">
+                    <div class="movie-poster">
+                        <img src="https://via.placeholder.com/300x450/1a1a2e/ffffff?text=Guardians+of+the+Galaxy+Vol.+2" alt="Movie Poster">
+                        <div class="movie-overlay">
+                            <div class="movie-rating">7.6</div>
+                        </div>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">Guardians of the Galaxy Vol. 2</h3>
+                        <div class="movie-genres">
+                            <span class="genre-tag">Action</span>
+                            <span class="genre-tag">Adventure</span>
+                            <span class="genre-tag">Comedy</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Loading State -->
+        <div class="loading-container" id="loadingContainer" style="display: none;">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Finding your perfect movie matches...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
